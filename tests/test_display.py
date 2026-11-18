@@ -4,7 +4,7 @@ import av
 import numpy as np
 import pytest
 from app.capture import Capture
-from app.runtime import near_person,overlay_for,render
+from app.runtime import AnalysisSnapshot,near_person,overlay_for,render
 from app.types import Detection
 
 
@@ -21,13 +21,17 @@ def test_display_hides_ppe_boxes_that_have_no_wearer(frame_factory):
 
 def test_overlay_draws_only_fresh_analysis_from_the_same_session(frame_factory):
     shown=frame_factory(10.,frame_id=8);person=Detection('person',(100.,50.,200.,400.),.9,1);state={'k':{}}
-    tracks,ppe,note,warning,age=overlay_for(shown,('session1',5,9.88,[person],state),1.)
+    def snapshot(session='session1',frame_id=5,t=9.88,size=(640,480)):
+        return AnalysisSnapshot(session,frame_id,t,size,[person],state)
+    tracks,ppe,note,warning,age=overlay_for(shown,snapshot(),1.,now=10.)
     assert tracks==[person] and ppe is state and warning is None
     assert 'frame 5' in note and '120 ms' in note and age==pytest.approx(.12)
-    # A result a few milliseconds newer than the picture is still current.
-    assert overlay_for(shown,('session1',9,10.02,[person],state),1.)[4]==0.
-    for stale in (None,('session2',5,9.88,[person],state),('session1',5,8.9,[person],state),('session1',5,11.5,[person],state)):
-        assert overlay_for(shown,stale,1.)==([],{},None,'NO CURRENT ANALYSIS',None)
+    # Never label future boxes as "0 ms earlier", or reuse original pixels on
+    # a different source resolution, even if the capture session is unchanged.
+    for stale in (None,snapshot(session='session2'),snapshot(t=8.9),snapshot(frame_id=9,t=10.02),snapshot(size=(1280,720))):
+        assert overlay_for(shown,stale,1.,now=10.)==([],{},None,'NO CURRENT ANALYSIS',None)
+    # Display/analysis times can be close while both waited in the pipeline.
+    assert overlay_for(shown,snapshot(),1.,now=10.9)==([],{},None,'NO CURRENT ANALYSIS',None)
 
 
 def test_stamp_note_and_warning_are_visible_and_never_mask_model_state(frame_factory):
@@ -80,7 +84,7 @@ def test_live_preview_shows_unanalysed_frames_and_keeps_evidence_on_analysed_one
     runtime,camera,capture=make_runtime(tmp_path,True);now=time.monotonic()
     analysed=frame_factory(now-.1,camera=camera,frame_id=5);shown=frame_factory(now,camera=camera,frame_id=8)
     person=Detection('person',(100.,50.,200.,400.),.9,1)
-    runtime.analysis[camera]=(analysed.session_id,5,analysed.received_monotonic,[person],{})
+    runtime.analysis[camera]=AnalysisSnapshot(analysed.session_id,5,analysed.received_monotonic,(640,480),[person],{})
     runtime.render_slots[camera].put((analysed,[person],{},[],[]));capture.view.put(shown)
     run_loops(runtime,lambda:camera in runtime.latest and runtime.store.buffers)
     assert runtime.latest[camera][0].frame_id==8 and runtime.preview(camera)[0]==shown.key
@@ -100,3 +104,30 @@ def test_default_preview_still_shows_only_analysed_frames(tmp_path,frame_factory
     assert runtime.metrics[camera].snapshot()['overlay_age_ms'] is None
     # Without live_preview the display thread is never started.
     assert not runtime.live_preview and not runtime.viewer.is_alive()
+
+
+def test_cached_preview_expires_when_its_analysis_expires(tmp_path,frame_factory):
+    runtime,camera,capture=make_runtime(tmp_path,True);now=time.monotonic()
+    shown=frame_factory(now-.1,camera=camera,frame_id=8)
+    runtime.latest[camera]=(shown,b'cached-prediction-picture')
+    runtime.preview_expires[camera]=now-.01
+    key,jpeg=runtime.preview(camera)
+    assert key!=shown.key and jpeg!=b'cached-prediction-picture'
+
+
+def test_decoder_errors_do_not_print_stream_credentials():
+    import subprocess,sys
+    code="""
+import av
+from app.capture import quiet_decoder_logs
+quiet_decoder_logs()
+assert av.logging.get_level() is None
+try:
+    av.open('rtsp://sample-user:sample-secret@127.0.0.1:1/unavailable',timeout=(.2,.2))
+except av.error.FFmpegError:
+    pass
+else:
+    raise AssertionError('Expected an unavailable local stream')
+"""
+    result=subprocess.run([sys.executable,'-c',code],capture_output=True,timeout=5)
+    assert result.returncode==0 and result.stdout==result.stderr==b''

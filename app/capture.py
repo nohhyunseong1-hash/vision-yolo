@@ -11,6 +11,13 @@ from app.orientation import decode_bgr
 
 
 LIVE_DECODE_THREADS=2
+AV_LOG_QUIET=-8  # FFmpeg libavutil/log.h: disable even native stderr logging.
+
+
+def quiet_decoder_logs():
+    # No Python callback on codec workers, and no RTSP URLs on native stderr.
+    av.logging.set_level(None)
+    av.logging.set_libav_level(AV_LOG_QUIET)
 
 
 class LatestSlot:
@@ -72,7 +79,7 @@ class Capture:
                 # holding the GIL and that free waits for those workers, so a decoder
                 # error during a close froze the whole process (stop requests hung,
                 # twice on 2026-11-18). None keeps FFmpeg's logs entirely in C.
-                av.logging.set_level(None)
+                quiet_decoder_logs()
                 options={"rtsp_transport":"tcp","fflags":"nobuffer","flags":"low_delay","reorder_queue_size":"0"} if self.mode=="LIVE" else {}
                 with av.open(self.source(),options=options,timeout=(4.,4.)) as container:
                     stream=container.streams.video[0]

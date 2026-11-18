@@ -3,7 +3,7 @@ import threading
 import time
 import queue
 import os
-from dataclasses import asdict
+from dataclasses import asdict,dataclass
 from pathlib import Path
 import cv2
 import numpy as np
@@ -46,22 +46,32 @@ def near_person(box,person):
     return overlap_fraction(box,(x1-dx,y1-dy,x2+dx,y2+dy))>.5
 
 
-def overlay_for(display,analysis,ttl_s):
+@dataclass(frozen=True)
+class AnalysisSnapshot:
+    session_id:str
+    frame_id:int
+    observed_at:float
+    source_size:tuple[int,int]
+    tracks:list
+    ppe:dict
+
+
+def overlay_for(display,analysis,ttl_s,*,now=None):
     """Choose the boxes for a displayed frame that was not itself analysed.
 
-    `analysis` is the camera's newest result as
-    (session_id,frame_id,received_monotonic,tracks,ppe). Its boxes are used only
-    when it comes from the same capture session and lies within the observation
-    TTL of the displayed frame; the stamp then says which frame they belong to.
+    The analysis must precede the display, match its session and source size,
+    and remain fresh both relative to that frame and to the wall clock.
+    The stamp says which frame the boxes belong to; they are not new detections.
     Otherwise the picture is shown bare with a warning, so boxes that stopped
     updating never look current. Returns (tracks,ppe,note,warning,age_s).
     """
     if analysis is not None:
-        session,frame_id,observed,tracks,ppe=analysis
-        age=display.received_monotonic-observed
-        if session==display.session_id and abs(age)<ttl_s:
-            age=max(0.,age)
-            return tracks,ppe,f"boxes: frame {frame_id}, {age*1000:.0f} ms earlier",None,age
+        current=time.monotonic() if now is None else now
+        age=display.received_monotonic-analysis.observed_at
+        if (analysis.session_id==display.session_id and analysis.frame_id<=display.frame_id
+            and analysis.source_size==(display.source_width,display.source_height)
+            and 0<=age<ttl_s and 0<=current-analysis.observed_at<ttl_s):
+            return analysis.tracks,analysis.ppe,f"boxes: frame {analysis.frame_id}, {age*1000:.0f} ms earlier",None,age
     return [],{},None,"NO CURRENT ANALYSIS",None
 
 
@@ -128,7 +138,7 @@ class Runtime:
         self.rule_revision=None
         # live_preview shows every decoded frame with the newest analysis drawn on
         # it, so the picture no longer waits for inference. One result per camera.
-        self.live_preview=bool(config["runtime"].get("live_preview",False));self.analysis={};self.placeholders={}
+        self.live_preview=bool(config["runtime"].get("live_preview",False));self.analysis={};self.placeholders={};self.preview_expires={}
 
     @property
     def config_revision(self):
@@ -252,7 +262,8 @@ class Runtime:
                             except queue.Full:self.store.error="evidence_render_queue_full"
                     if len(self.evidence_requested)>10000:self.evidence_requested={e["id"] for e in self.events.states.values()}
                     self.render_slots[cid].put((frame,tracks,ppe,current_zones,[]))
-                    self.analysis[cid]=(frame.session_id,frame.frame_id,frame.received_monotonic,tracks,ppe)
+                    self.analysis[cid]=AnalysisSnapshot(frame.session_id,frame.frame_id,frame.received_monotonic,
+                        (frame.source_width,frame.source_height),tracks,ppe)
                 except Exception as error:
                     self.error=type(error).__name__
                     for event in self.events.suspend_camera(cid):self.store.save_event(event)
@@ -322,8 +333,10 @@ class Runtime:
                 worked=True
                 try:
                     with self.lock:zones=list(self.zones[cid])
-                    tracks,ppe,note,warning,age=overlay_for(frame,self.analysis.get(cid),self.config["runtime"]["observation_ttl_s"])
+                    analysis=self.analysis.get(cid);ttl=self.config["runtime"]["observation_ttl_s"]
+                    tracks,ppe,note,warning,age=overlay_for(frame,analysis,ttl)
                     jpeg=render(frame,tracks,ppe,zones,self.config["runtime"]["preview_width"],self.detector.ready,note,warning,fast=True)
+                    self.preview_expires[cid]=min(frame.received_monotonic+ttl,analysis.observed_at+ttl) if age is not None else frame.received_monotonic+ttl
                     self.latest[cid]=(frame,jpeg);self.metrics[cid].preview.append(time.monotonic())
                     # Pace from the previous slot, not from `now`: adding the interval
                     # to the moment of each take let poll and render time accumulate
@@ -338,7 +351,10 @@ class Runtime:
         item=self.latest.get(camera_id);capture=self.cameras[camera_id]
         if item:
             frame,jpeg=item
-            if frame.session_id==capture.session_id and capture.status=="connected" and time.monotonic()-frame.received_monotonic<self.config["runtime"]["observation_ttl_s"]:
+            now=time.monotonic()
+            if (frame.session_id==capture.session_id and capture.status=="connected"
+                and now-frame.received_monotonic<self.config["runtime"]["observation_ttl_s"]
+                and (not self.live_preview or now<self.preview_expires.get(camera_id,float('inf')))):
                 return frame.key,jpeg
         # The placeholder changes once a second; viewers poll far more often, so
         # build it once per key instead of on every poll. One entry per camera.

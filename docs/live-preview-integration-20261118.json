@@ -1,0 +1,113 @@
+{
+  "created_at": "2026-11-18T08:35:15.648708+00:00",
+  "source_branch": "https://github.com/kimsunwu4981-ship-it/vision-yolo/tree/live-preview-and-runtime-fixes",
+  "source_head": "32a8e35937a78766af970017eb64b8c01c223d64",
+  "source_commits": [
+    "22e089a8a29c8f2516bcc716522bbc35984d51bf",
+    "32a8e35937a78766af970017eb64b8c01c223d64"
+  ],
+  "parent_main": "0c49550a39cf05758f349758d70610d8c9dc61a7",
+  "integration_adjustments": [
+    "retained enabled far-person model for desktop quality baseline",
+    "rejected future/session/shape-mismatched and wall-clock-expired display overlays",
+    "expired cached JPEGs when their analysis expires",
+    "disabled both Python FFmpeg callback and native sensitive stream logs"
+  ],
+  "model_weights_changed": false,
+  "training_started": false,
+  "model_hashes": [
+    "3bd15c733eed1a9aa033719d2da2b3c889501f14c15ac1e668a6f2be5bcbcec9",
+    "03c3efe5908fd7e25c21bbc0b92200787bdff7c961995c2a03d36c29afcf81dd",
+    "f6db8b1b1eb46c639a1136a8406fc4f0a3b425cad837e5ff8a1385bb701bfe6c",
+    "61c99bc49a35988268ef7876b0380cea9516ee59008c34f1a3971fd962a170b4",
+    "11fabaa10f295fe36997821d93689e3280a3a181589b940f74959b7b92b666c4"
+  ],
+  "unit_tests": {
+    "passed": 71,
+    "initial_failures": "Two API tests could not acquire the singleton pipeline lock while the old server was running; full suite passed after graceful shutdown."
+  },
+  "http_integration": {
+    "started_at": "2026-11-18T08:27:05.358921+00:00",
+    "fixture": "generated still-photo videos, not real surveillance video",
+    "checks": {
+      "actual_cuda_model": true,
+      "partial_model_not_operational_ready": true,
+      "four_mjpeg_actual_model_frames": true,
+      "stopped_camera_isolation": true,
+      "restart_new_session": true,
+      "roi_save_reload": true,
+      "actual_model_event_ack": true,
+      "evidence_http_and_video_decode": true,
+      "websocket_reconnect": true
+    },
+    "passed": true
+  },
+  "four_channel_replay": {
+    "directory": "outputs\\benchmarks\\run-2026-11-18T083010-420174+0000",
+    "seconds": 45,
+    "source": "same industrial file replayed four times",
+    "browser_connected": false,
+    "physical_cameras": false,
+    "field_accuracy_evaluated": false,
+    "preview_mode": "live_display",
+    "channels": {
+      "cam1": {
+        "mean_inference_fps": 3.9377142857142857,
+        "mean_preview_fps": 24.024571428571427,
+        "maximum_queue": 1,
+        "maximum_observation_age_s": 1.0,
+        "final_p95_decode_to_live_encoded_ms": 16.00000000325963,
+        "final_overlay_age_p95_ms": 844.0000000409782
+      },
+      "cam2": {
+        "mean_inference_fps": 3.938,
+        "mean_preview_fps": 24.025142857142857,
+        "maximum_queue": 1,
+        "maximum_observation_age_s": 0.968,
+        "final_p95_decode_to_live_encoded_ms": 16.00000000325963,
+        "final_overlay_age_p95_ms": 842.9999999934807
+      },
+      "cam3": {
+        "mean_inference_fps": 3.9377142857142857,
+        "mean_preview_fps": 23.986285714285714,
+        "maximum_queue": 1,
+        "maximum_observation_age_s": 0.968,
+        "final_p95_decode_to_live_encoded_ms": 16.00000000325963,
+        "final_overlay_age_p95_ms": 843.9999999827705
+      },
+      "cam4": {
+        "mean_inference_fps": 3.9394285714285715,
+        "mean_preview_fps": 23.943714285714286,
+        "maximum_queue": 1,
+        "maximum_observation_age_s": 0.968,
+        "final_p95_decode_to_live_encoded_ms": 16.00000000325963,
+        "final_overlay_age_p95_ms": 844.000000032247
+      }
+    },
+    "peak_process_ram_gb": 3.43,
+    "peak_global_vram_gb": 3.143,
+    "limitation": "Preview FPS is not detection FPS. Decode-to-live-encoded latency does not include model inference and is not comparable to the earlier analysed-frame-preview path. No browser or camera-sensor delay measured. Observation gaps and field accuracy remain unresolved."
+  },
+  "source_code_sha256": {
+    "app\\__init__.py": "c9a720d8283d9d0b713e282cebace98c50061e50b927928c9983d2b6c945ec89",
+    "app\\api.py": "52d5d5c320beafb2e35e9da6189778a74d27aa6bdd013bc2991114e367a7d6fd",
+    "app\\body_parts.py": "577072cba73e84b59ad1acc2b2b4f50bbfe9b4336acd1b8424e7dafd2224b1dc",
+    "app\\capture.py": "704fc8bab3b2a25d884ed8c84dc716cefd695e80b5812266b1983a7af50c1f39",
+    "app\\common.py": "1af58ab0448c7e56b2b35ebf1631bb89711a52ce7961ab678aef484e1af76f04",
+    "app\\config.py": "cd99e9ee97da93af9c58daa0b5c136b61256b3312ffb3dff6ae81f42a9e2f865",
+    "app\\detail_inference.py": "5a691a8c60e884de4ac03089add1bae400a2a160326425043f31942b81780651",
+    "app\\events.py": "240db231427768e485bd67f82a77b824315fca71d8ac64045c05390b75ee0caa",
+    "app\\geometry.py": "dff90a82af6c82f837e817300da4bda0f1969553b6d616cd2b6ac042a85e8792",
+    "app\\inference.py": "09af002049ac47fe400d7a0cf12054269bef71fa6d49fc6d6edcc1a5571336a8",
+    "app\\main.py": "5e88fb65cb19f20c10f42fa6bdad6930e4e58232fe2ba2c9b2135f862942d27c",
+    "app\\monitoring.py": "85716c586c6aa951cc47bc28c9596f196489dc9874115ff1fee846f544168906",
+    "app\\orientation.py": "5cbc99e3d68cc50c2dc2555ed6d9c21015627b35fb83949f77245e9c3976aa8a",
+    "app\\pose_regions.py": "5ccb15b74578bc3a604b8d459cf5101e06eec66f5145ab11a4d7638d58a30bc1",
+    "app\\ppe.py": "f3225fa4f22470b83f869eb6ab3187737429d49c2a3f8a096a076b88f08206cb",
+    "app\\rules.py": "f9e598da2f79c576e433a42c3d59f3b4870ce419772ff8975619b3a368a7536a",
+    "app\\runtime.py": "7594bb63b5f11a4d9435b499f2d2125ac32686d93673738f62bd9f1cdc3cbabb",
+    "app\\storage.py": "0e1c6b62b1114a09639ebb02b8c66d9169ab0b2cd7b866cbfc002bb8109a30de",
+    "app\\tracking.py": "759b594d563d32ad31af0a8a858d1a61e23409b9b693df69f7c78b7009adf942",
+    "app\\types.py": "7b6cf6a2dcf1d80276010ff1d30e79d7823ff2006bbefed8a74604e24f54d957"
+  }
+}

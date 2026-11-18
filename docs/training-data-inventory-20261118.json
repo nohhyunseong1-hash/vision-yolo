@@ -1,0 +1,342 @@
+{
+  "scope": "Metadata inventory only; not annotation/license/completeness acceptance",
+  "records": [
+    {
+      "archive": "hard_hat_workers.zip",
+      "bytes": 246296073,
+      "images": 7035,
+      "datasets": [
+        {
+          "metadata": "test/_annotations.coco.json",
+          "images": 706,
+          "annotations": {
+            "helmet": 1915,
+            "head": 726,
+            "person": 64
+          }
+        },
+        {
+          "metadata": "train/_annotations.coco.json",
+          "images": 4916,
+          "annotations": {
+            "helmet": 13919,
+            "person": 450,
+            "head": 4612
+          }
+        },
+        {
+          "metadata": "valid/_annotations.coco.json",
+          "images": 1413,
+          "annotations": {
+            "helmet": 3913,
+            "head": 1339,
+            "person": 101
+          }
+        }
+      ]
+    },
+    {
+      "archive": "hardhat_safetyvest.zip",
+      "bytes": 1304622426,
+      "images": 22068,
+      "datasets": [
+        {
+          "metadata": "test/_annotations.coco.json",
+          "images": 2429,
+          "annotations": {
+            "head": 12478,
+            "helmet": 6698,
+            "vest": 928
+          }
+        },
+        {
+          "metadata": "train/_annotations.coco.json",
+          "images": 17226,
+          "annotations": {
+            "helmet": 43892,
+            "vest": 6322,
+            "head": 98174
+          }
+        },
+        {
+          "metadata": "valid/_annotations.coco.json",
+          "images": 2413,
+          "annotations": {
+            "helmet": 6494,
+            "head": 13519,
+            "vest": 861
+          }
+        }
+      ]
+    },
+    {
+      "archive": "helmet_0xjjk.zip",
+      "bytes": 34235959,
+      "images": 502,
+      "datasets": [
+        {
+          "metadata": "test/_annotations.coco.json",
+          "images": 51,
+          "annotations": {
+            "helmet": 151,
+            "no-helmet": 43
+          }
+        },
+        {
+          "metadata": "train/_annotations.coco.json",
+          "images": 351,
+          "annotations": {
+            "no-helmet": 335,
+            "helmet": 1031
+          }
+        },
+        {
+          "metadata": "valid/_annotations.coco.json",
+          "images": 100,
+          "annotations": {
+            "helmet": 268,
+            "no-helmet": 99
+          }
+        }
+      ]
+    },
+    {
+      "archive": "helmet_v3.zip",
+      "bytes": 148486165,
+      "images": 2692,
+      "datasets": [
+        {
+          "metadata": "test/_annotations.coco.json",
+          "images": 73,
+          "annotations": {
+            "Person": 165,
+            "Mask": 28,
+            "No Hard Hat": 30,
+            "No Safety Vest": 86,
+            "Hard Hat": 108,
+            "Safety Vest": 58,
+            "Vehicle": 41,
+            "No Mask": 79,
+            "Machinery": 43,
+            "Safety Cone": 90
+          }
+        },
+        {
+          "metadata": "train/_annotations.coco.json",
+          "images": 2528,
+          "annotations": {
+            "Person": 7734,
+            "No Safety Vest": 3426,
+            "Mask": 1591,
+            "Machinery": 4953,
+            "Safety Vest": 2556,
+            "Hard Hat": 2794,
+            "No Mask": 2914,
+            "Vehicle": 1440,
+            "Safety Cone": 3206,
+            "No Hard Hat": 1691
+          }
+        },
+        {
+          "metadata": "valid/_annotations.coco.json",
+          "images": 91,
+          "annotations": {
+            "Hard Hat": 73,
+            "No Safety Vest": 96,
+            "Mask": 21,
+            "Person": 141,
+            "No Hard Hat": 65,
+            "Machinery": 46,
+            "Vehicle": 23,
+            "Safety Cone": 15,
+            "No Mask": 74,
+            "Safety Vest": 34
+          }
+        }
+      ]
+    },
+    {
+      "archive": "new_ppe.zip",
+      "bytes": 12873355,
+      "images": 427,
+      "datasets": [
+        {
+          "metadata": "test/_annotations.coco.json",
+          "images": 45,
+          "annotations": {
+            "Helmet": 25,
+            "Protective Clothing": 26,
+            "No Protective Clothing": 19,
+            "No Helmet": 20
+          }
+        },
+        {
+          "metadata": "train/_annotations.coco.json",
+          "images": 297,
+          "annotations": {
+            "Protective Clothing": 185,
+            "Helmet": 153,
+            "No Helmet": 144,
+            "No Protective Clothing": 112
+          }
+        },
+        {
+          "metadata": "valid/_annotations.coco.json",
+          "images": 85,
+          "annotations": {
+            "Protective Clothing": 51,
+            "No Helmet": 42,
+            "Helmet": 43,
+            "No Protective Clothing": 34
+          }
+        }
+      ]
+    },
+    {
+      "archive": "no_hard_hat.zip",
+      "bytes": 29229536,
+      "images": 349,
+      "datasets": [
+        {
+          "metadata": "test/_annotations.coco.json",
+          "images": 29,
+          "annotations": {
+            "no hat": 38,
+            "no vest": 51,
+            "hat": 61,
+            "vest": 45
+          }
+        },
+        {
+          "metadata": "train/_annotations.coco.json",
+          "images": 243,
+          "annotations": {
+            "hat": 237,
+            "vest": 137,
+            "no vest": 516,
+            "no hat": 423
+          }
+        },
+        {
+          "metadata": "valid/_annotations.coco.json",
+          "images": 77,
+          "annotations": {
+            "hat": 120,
+            "vest": 63,
+            "no vest": 164,
+            "no hat": 109
+          }
+        }
+      ]
+    },
+    {
+      "archive": "ppe_construction_v2.zip",
+      "bytes": 166773551,
+      "images": 2926,
+      "datasets": [
+        {
+          "metadata": "valid/_annotations.coco.json",
+          "images": 518,
+          "annotations": {
+            "person": 1091,
+            "helmet": 945,
+            "no_vest": 531,
+            "vest": 541,
+            "no_helmet": 163
+          }
+        },
+        {
+          "metadata": "train/_annotations.coco.json",
+          "images": 2408,
+          "annotations": {
+            "person": 5517,
+            "vest": 2503,
+            "helmet": 4709,
+            "no_vest": 2884,
+            "no_helmet": 897
+          }
+        }
+      ]
+    },
+    {
+      "archive": "ppe_v11.zip",
+      "bytes": 33828048,
+      "images": 549,
+      "datasets": [
+        {
+          "metadata": "test/_annotations.coco.json",
+          "images": 56,
+          "annotations": {
+            "helmet": 150,
+            "no_goggles": 123,
+            "no_helmet": 79,
+            "no_glove": 118,
+            "no_shoes": 44,
+            "shoes": 112,
+            "glove": 64,
+            "goggles": 6
+          }
+        },
+        {
+          "metadata": "train/_annotations.coco.json",
+          "images": 385,
+          "annotations": {
+            "no_helmet": 473,
+            "shoes": 827,
+            "no_glove": 798,
+            "helmet": 1121,
+            "glove": 414,
+            "no_goggles": 714,
+            "no_shoes": 112,
+            "goggles": 114
+          }
+        },
+        {
+          "metadata": "valid/_annotations.coco.json",
+          "images": 108,
+          "annotations": {
+            "shoes": 230,
+            "helmet": 319,
+            "glove": 100,
+            "no_glove": 230,
+            "no_goggles": 215,
+            "no_helmet": 187,
+            "goggles": 33,
+            "no_shoes": 15
+          }
+        }
+      ]
+    },
+    {
+      "archive": "safety_vests.zip",
+      "bytes": 433881228,
+      "images": 3897,
+      "datasets": [
+        {
+          "metadata": "test/_annotations.coco.json",
+          "images": 390,
+          "annotations": {
+            "vest": 662,
+            "no-vest": 226
+          }
+        },
+        {
+          "metadata": "train/_annotations.coco.json",
+          "images": 2728,
+          "annotations": {
+            "vest": 4499,
+            "no-vest": 1436
+          }
+        },
+        {
+          "metadata": "valid/_annotations.coco.json",
+          "images": 779,
+          "annotations": {
+            "no-vest": 362,
+            "vest": 1287
+          }
+        }
+      ]
+    }
+  ]
+}

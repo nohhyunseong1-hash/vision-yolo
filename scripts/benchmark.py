@@ -31,12 +31,13 @@ def benchmark(seconds,cameras,channels=4,microbatch=1,exercise_zones=False):
             "source_code_sha256":{str(p.relative_to(ROOT)):sha256(p) for p in sorted((ROOT/"app").glob('*.py'))}})
         start=time.monotonic()
         with open(run/"performance.csv","w",newline="",encoding="utf-8") as stream:
-            fields=["elapsed_s","camera_id","capture_fps","inference_fps","preview_fps","p95_decode_to_encoded_ms","observation_age_s","drops","queue","process_ram_gb","vram_gb"]
+            fields=["elapsed_s","camera_id","capture_fps","inference_fps","preview_fps","preview_mode","p95_decode_to_encoded_ms","overlay_age_p95_ms","observation_age_s","drops","queue","process_ram_gb","vram_gb"]
             writer=csv.DictWriter(stream,fieldnames=fields);writer.writeheader()
             while time.monotonic()-start<seconds:
                 snapshot=runtime.snapshot();samples.append(snapshot)
                 for c in snapshot["cameras"]:
                     writer.writerow({"elapsed_s":round(time.monotonic()-start,2),"camera_id":c["id"],"capture_fps":c["capture_decode_fps"],"inference_fps":c["inference_fps"],"preview_fps":c["preview_fps"],
+                        "preview_mode":"live_display" if runtime.live_preview else "analysed_frame","overlay_age_p95_ms":(c.get("overlay_age_ms") or {}).get("p95"),
                         "p95_decode_to_encoded_ms":(c["decode_ready_to_encoded_ms"] or {}).get("p95"),"observation_age_s":c["last_observation_age_s"],"drops":c["frame_drops"],"queue":c["queue_size"],
                         "process_ram_gb":snapshot["system"].get("process_ram_gb"),"vram_gb":(snapshot["system"].get("gpu") or {}).get("vram_used_gb")})
                 stream.flush();time.sleep(1)
