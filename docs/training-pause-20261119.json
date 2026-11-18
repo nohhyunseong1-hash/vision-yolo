@@ -1,0 +1,206 @@
+{
+  "recorded_at": "2026-11-18T15:54:13.719183+00:00",
+  "state": "paused_by_user",
+  "campaign": "campaign-v9-20261118",
+  "training_code_commit": "1d5cd4fe936b436f1552a7198883a77704086eb0",
+  "training_code_sha256": {
+    "scripts/training_campaign.py": "079b4cc61da488122423d83017007dcbccb1c17093071fd68aa29e659bd6622d",
+    "scripts/train_campaign_job.py": "3985225ad684ebb9279daa03fe59219bbc944799f61bd585076a49c0330d5953",
+    "scripts/prepare_training_campaign.py": "74c2144196bbb4e06e3d459f8772a0e1ef891fa0ae257b86b2f602241a7514a1"
+  },
+  "config_sha256": "b9adf9c02e218a5ea641b54caa35f8a828adde6336383134450196509e030c52",
+  "dataset_audit_sha256": "3c9a25a496f349cdbff3878d88c9a8109c71acafb69430861a2fc2acc63e3b25",
+  "completed_jobs": [
+    {
+      "job": "smoke-head-s-640",
+      "completed_epochs_from_csv": 3,
+      "checkpoint": "outputs/training/campaign-v9-20261118/runs/smoke-head-s-640/weights/best.pt",
+      "checkpoint_sha256": "b60bb3011b0594998a2f5ddde6817740740704ea8267c4db0bfaa9c3ce7cec40",
+      "development_validation": {
+        "metrics/precision(B)": 0.3287384299819892,
+        "metrics/recall(B)": 0.2698821796759941,
+        "metrics/mAP50(B)": 0.21649482638333847,
+        "metrics/mAP50-95(B)": 0.15589372187808417,
+        "fitness": 0.15589372187808417
+      }
+    },
+    {
+      "job": "smoke-vest-s-640",
+      "completed_epochs_from_csv": 3,
+      "checkpoint": "outputs/training/campaign-v9-20261118/runs/smoke-vest-s-640/weights/best.pt",
+      "checkpoint_sha256": "d66931f7ba5a60b2dc77abc7b0b7a49bdf4f031bd98baac7c1943fd210bb9685",
+      "development_validation": {
+        "metrics/precision(B)": 0.2978028497523155,
+        "metrics/recall(B)": 0.2352851826536037,
+        "metrics/mAP50(B)": 0.1692383290799047,
+        "metrics/mAP50-95(B)": 0.09098149325985455,
+        "fitness": 0.09098149325985455
+      }
+    },
+    {
+      "job": "smoke-person-s-1280",
+      "completed_epochs_from_csv": 3,
+      "checkpoint": "outputs/training/campaign-v9-20261118/runs/smoke-person-s-1280/weights/best.pt",
+      "checkpoint_sha256": "a399c576eb7adc31cf5b0414d9a917c55d5c017809ff37c9ccafbb8d44dd27af",
+      "development_validation": {
+        "metrics/precision(B)": 0.8097291375012979,
+        "metrics/recall(B)": 0.8076923076923077,
+        "metrics/mAP50(B)": 0.845979447984834,
+        "metrics/mAP50-95(B)": 0.33060859995757663,
+        "fitness": 0.33060859995757663
+      }
+    },
+    {
+      "job": "pilot-head-n-640",
+      "completed_epochs_from_csv": 15,
+      "checkpoint": "outputs/training/campaign-v9-20261118/runs/pilot-head-n-640/weights/best.pt",
+      "checkpoint_sha256": "aa9d31f1d0e9edbc8013868a9a53c38f8f222c713b1ffb7e8fa625b6b8cd5956",
+      "development_validation": {
+        "metrics/precision(B)": 0.7879885313860591,
+        "metrics/recall(B)": 0.7428506728778468,
+        "metrics/mAP50(B)": 0.8043823548074217,
+        "metrics/mAP50-95(B)": 0.5754552468825784,
+        "fitness": 0.5754552468825784
+      }
+    },
+    {
+      "job": "pilot-head-s-640",
+      "completed_epochs_from_csv": 15,
+      "checkpoint": "outputs/training/campaign-v9-20261118/runs/pilot-head-s-640/weights/best.pt",
+      "checkpoint_sha256": "938409a6c897cc62e485cd23b0a970affd74c1c7eae5aca3e5a37e25c858702f",
+      "development_validation": {
+        "metrics/precision(B)": 0.9279063109570043,
+        "metrics/recall(B)": 0.8466614906832298,
+        "metrics/mAP50(B)": 0.9398645072338272,
+        "metrics/mAP50-95(B)": 0.69386996045388,
+        "fitness": 0.69386996045388
+      }
+    },
+    {
+      "job": "pilot-vest-n-640",
+      "completed_epochs_from_csv": 15,
+      "checkpoint": "outputs/training/campaign-v9-20261118/runs/pilot-vest-n-640/weights/best.pt",
+      "checkpoint_sha256": "380c94474ea51661ba1d787eaf439952609fb4e4ab39ed9966fd9ed7fecacc49",
+      "development_validation": {
+        "metrics/precision(B)": 0.8259698370196955,
+        "metrics/recall(B)": 0.7779388571923294,
+        "metrics/mAP50(B)": 0.8584587095534764,
+        "metrics/mAP50-95(B)": 0.5967149682054311,
+        "fitness": 0.5967149682054311
+      }
+    },
+    {
+      "job": "pilot-vest-s-640",
+      "completed_epochs_from_csv": 15,
+      "checkpoint": "outputs/training/campaign-v9-20261118/runs/pilot-vest-s-640/weights/best.pt",
+      "checkpoint_sha256": "a8f56603477b88da679df72175b6fb99e39896dec2c750f99af37ae79fb44a11",
+      "development_validation": {
+        "metrics/precision(B)": 0.9004298486558995,
+        "metrics/recall(B)": 0.8940418415864845,
+        "metrics/mAP50(B)": 0.9357315111571969,
+        "metrics/mAP50-95(B)": 0.6722187418762511,
+        "fitness": 0.6722187418762511
+      }
+    },
+    {
+      "job": "pilot-person-n-960",
+      "completed_epochs_from_csv": 15,
+      "checkpoint": "outputs/training/campaign-v9-20261118/runs/pilot-person-n-960/weights/best.pt",
+      "checkpoint_sha256": "ac406fb6fefb4c8e50bbd1e40056960e19b51db8b630fefad1ff52deb92c4098",
+      "development_validation": {
+        "metrics/precision(B)": 0.9440787863941557,
+        "metrics/recall(B)": 0.9296058243944183,
+        "metrics/mAP50(B)": 0.9685716674979339,
+        "metrics/mAP50-95(B)": 0.6668813526091857,
+        "fitness": 0.6668813526091857
+      }
+    },
+    {
+      "job": "pilot-person-s-960",
+      "completed_epochs_from_csv": 15,
+      "checkpoint": "outputs/training/campaign-v9-20261118/runs/pilot-person-s-960/weights/best.pt",
+      "checkpoint_sha256": "f7793a47a7e486fd9f08859abd9f1cd69502ebc14a788e2be1abbc1856c07846",
+      "development_validation": {
+        "metrics/precision(B)": 0.9535384686139412,
+        "metrics/recall(B)": 0.9282855836101818,
+        "metrics/mAP50(B)": 0.9756650815013066,
+        "metrics/mAP50-95(B)": 0.6926040631456625,
+        "fitness": 0.6926040631456625
+      }
+    },
+    {
+      "job": "pilot-person-n-1280",
+      "completed_epochs_from_csv": 15,
+      "checkpoint": "outputs/training/campaign-v9-20261118/runs/pilot-person-n-1280/weights/best.pt",
+      "checkpoint_sha256": "585c432797bec8e800be3c7f81e03944fb66abef39e9fb38c195f2366dc32736",
+      "development_validation": {
+        "metrics/precision(B)": 0.9466223759504858,
+        "metrics/recall(B)": 0.9134709931170109,
+        "metrics/mAP50(B)": 0.9711228896875757,
+        "metrics/mAP50-95(B)": 0.5831027702761904,
+        "fitness": 0.5831027702761904
+      }
+    },
+    {
+      "job": "pilot-person-s-1280",
+      "completed_epochs_from_csv": 15,
+      "checkpoint": "outputs/training/campaign-v9-20261118/runs/pilot-person-s-1280/weights/best.pt",
+      "checkpoint_sha256": "edbb02e9c339f8c1e146b217a58c48c2d4236a9ab65eacff1c79012fec366592",
+      "development_validation": {
+        "metrics/precision(B)": 0.9444831665055486,
+        "metrics/recall(B)": 0.9033217091230857,
+        "metrics/mAP50(B)": 0.9707090254204749,
+        "metrics/mAP50-95(B)": 0.6250885354037169,
+        "fitness": 0.6250885354037169
+      }
+    },
+    {
+      "job": "main-person-s-960-seed101",
+      "completed_epochs_from_csv": 117,
+      "checkpoint": "outputs/training/campaign-v9-20261118/runs/main-person-s-960-seed101/weights/best.pt",
+      "checkpoint_sha256": "ba51370c54891d6ccb261bddb8953d51d51ef2e59bb3a80d6ceda7c38aeab7f4",
+      "development_validation": {
+        "metrics/precision(B)": 0.9534717413644382,
+        "metrics/recall(B)": 0.9268896067486694,
+        "metrics/mAP50(B)": 0.9645200834883624,
+        "metrics/mAP50-95(B)": 0.7744772569000709,
+        "fitness": 0.7744772569000709
+      }
+    },
+    {
+      "job": "main-person-s-960-seed202",
+      "completed_epochs_from_csv": 150,
+      "checkpoint": "outputs/training/campaign-v9-20261118/runs/main-person-s-960-seed202/weights/best.pt",
+      "checkpoint_sha256": "d7d9944b94dd5e8dbb0a8c9476ab88f84d9393af5d5d3340b6df09ba472565e9",
+      "development_validation": {
+        "metrics/precision(B)": 0.9486663802527301,
+        "metrics/recall(B)": 0.9419862340216323,
+        "metrics/mAP50(B)": 0.9657106385827758,
+        "metrics/mAP50-95(B)": 0.7914365912975635,
+        "fitness": 0.7914365912975635
+      }
+    }
+  ],
+  "completed_job_count": 13,
+  "maximum_planned_jobs": 20,
+  "paused_job": "main-person-s-960-seed303",
+  "saved_epoch_zero_based": 91,
+  "pause_within_epoch_possible": true,
+  "resume_checkpoint": "outputs/training/campaign-v9-20261118/runs/main-person-s-960-seed303/weights/resume.pt",
+  "resume_checkpoint_sha256": "c9edf2e31674b39a61643f9a7a9718874f076a03638ac50203c3bc1dba660869",
+  "optimizer_and_ema_verified": true,
+  "following_jobs": 6,
+  "automatic_restart": false,
+  "training_processes_exited": true,
+  "user_video_used_for_training": false,
+  "automatic_deployment": false,
+  "field_acceptance": false,
+  "local_artifacts_are_gitignored": true,
+  "local_artifact_roots": [
+    "outputs/training/campaign-v9-20261118/",
+    "data/derived/campaign-v9-20261118/",
+    "models/"
+  ],
+  "resume_requires_explicit_user_request": true,
+  "pause_budget_note": "Current 72-hour wall-clock deadline includes paused time; review budget on explicit resume without silently changing immutable job specs."
+}
