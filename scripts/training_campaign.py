@@ -16,6 +16,11 @@ from app.common import ROOT, read_json, sha256, utc_now, write_json
 SOURCE_FILES=('scripts/training_campaign.py','scripts/train_campaign_job.py','scripts/prepare_training_campaign.py')
 
 
+def data_fingerprint(path):
+    spec=yaml.safe_load(path.read_text(encoding='utf-8'))
+    return {'data_sha256':sha256(path),'list_sha256':{s:sha256(Path(spec['path'])/spec[k]) for s,k in (('train','train'),('validation','val'))}}
+
+
 def select_candidate(candidates):
     """Validation-only architecture selection, followed by separate full training.
 
@@ -56,6 +61,7 @@ def initialize(campaign):
         spec=yaml.safe_load((task_folder/'data.yaml').read_text(encoding='utf-8'));spec['val']='selection-validation.txt'
         (task_folder/'selection.yaml').write_text(yaml.safe_dump(spec,allow_unicode=True),encoding='utf-8')
         data_specs[task]={'full_validation_images':len(rows),'selection_validation_images':len(selected),
+            'specifications':{'smoke':data_fingerprint(task_folder/'smoke.yaml'),'full':data_fingerprint(task_folder/'selection.yaml')},
             'manifests':{split:{'path':path,'sha256':sha256(ROOT/path)} for split,path in audit['manifest_paths'][task].items()}}
     jobs=[]
     combinations=[('head','s',640,12),('vest','s',640,12),('person','s',1280,4)]
@@ -88,10 +94,12 @@ def acquire_pipeline_lock():
 def materialize_job(config,job,folder,deadline):
     data=ROOT/'data/derived'/config['campaign']/job['task']/('smoke.yaml' if job['phase']=='smoke' else 'selection.yaml')
     data_yaml=yaml.safe_load(data.read_text(encoding='utf-8'))
+    fingerprint=data_fingerprint(data)
+    expected=config['dataset_specs'][job['task']]['specifications']['smoke' if job['phase']=='smoke' else 'full']
+    if fingerprint!=expected:raise ValueError('frozen_training_spec_changed')
     initial=ROOT/f'models/yolo26{job["size"]}.pt';source=read_json(initial.with_suffix('.pt.source.json'))
     if sha256(initial)!=source['sha256']:raise ValueError('unverified_initial_checkpoint')
-    return {**job,'data':str(data.relative_to(ROOT)),'data_sha256':sha256(data),
-        'list_sha256':{s:sha256(Path(data_yaml['path'])/data_yaml[k]) for s,k in (('train','train'),('validation','val'))},
+    return {**job,'data':str(data.relative_to(ROOT)),**fingerprint,
         'manifests':config['dataset_specs'][job['task']]['manifests'],'initial':str(initial.relative_to(ROOT)),
         'initial_sha256':source['sha256'],'initial_url':source['url'],'output':str((folder/'runs'/job['id']).relative_to(ROOT)),
         'source_commit':config['source_commit'],'source_hashes':config['source_hashes'],'dataset_audit_sha256':config['dataset_audit_sha256'],
@@ -113,6 +121,7 @@ def execute(campaign,resume=False):
     state.update(status='running',started_timestamp=started,started_at=state.get('started_at',utc_now()),
         runner_pid=os.getpid(),runner_create_time=psutil.Process().create_time(),updated_at=utc_now(),completed_jobs=state.get('completed_jobs',[]),
         user_video_used_for_training=False,automatic_deployment=False,config_sha256=sha256(folder/'config.json'))
+    state.pop('reason',None)
     jobs=list(config['jobs']);child=None
     def save():state['updated_at']=utc_now();write_json(folder/'status.json',state)
     try:

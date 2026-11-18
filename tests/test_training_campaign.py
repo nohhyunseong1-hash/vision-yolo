@@ -54,3 +54,8 @@ def test_even_rehashed_train_list_cannot_include_test(dataset):
     (folder/'train-list.txt').write_text(str(folder/'test.jpg')+'\n')
     spec['list_sha256']['train']=sha256(folder/'train-list.txt')
     with pytest.raises(ValueError,match='outside_approved_split'):worker.verify_dataset(spec)
+
+
+def test_final_validation_does_not_count_as_another_training_epoch(tmp_path):
+    path=tmp_path/'results.csv';path.write_text('epoch,time\n1,10\n2,20\n3,30\n')
+    assert worker.recorded_epoch(path)==3

@@ -1,5 +1,6 @@
 """One isolated CUDA training job with immutable inputs and live provenance."""
 import argparse
+import csv
 import importlib.metadata
 import math
 import os
@@ -59,6 +60,14 @@ def numeric_metrics(values):
     return result
 
 
+def recorded_epoch(path):
+    # Ultralytics invokes on_fit_epoch_end again during final validation after
+    # incrementing trainer.epoch. The saved CSV is the completed-epoch source.
+    with Path(path).open(encoding='utf-8',newline='') as stream:
+        rows=list(csv.DictReader(stream))
+    return int(float(rows[-1]['epoch'])) if rows else 0
+
+
 def run(job_path, resume=False):
     os.environ['YOLO_CONFIG_DIR'] = str(ROOT/'.cache/ultralytics')
     os.environ['YOLO_AUTOINSTALL'] = 'False'
@@ -105,7 +114,8 @@ def run(job_path, resume=False):
         now=time.monotonic()
         if not force and now-last_heartbeat[0]<10:return
         last_heartbeat[0]=now
-        update=dict(status='running',updated_at=utc_now(),epoch=trainer.epoch+1,epochs=spec['epochs'],
+        epoch=recorded_epoch(output/'results.csv') if force else min(trainer.epoch+1,spec['epochs'])
+        update=dict(status='running',updated_at=utc_now(),epoch=epoch,epochs=spec['epochs'],
             elapsed_seconds=round(now-started,2),actual_batch=trainer.batch_size,
             gradient_accumulation=trainer.accumulate,
             peak_allocated_gib=round(torch.cuda.max_memory_allocated()/2**30,3),
@@ -136,9 +146,9 @@ def run(job_path, resume=False):
         heartbeat(trainer)
     def epoch_end(trainer):
         provenance['validation_metrics']=numeric_metrics(trainer.metrics)
-        provenance['completed_epoch']=trainer.epoch+1
+        provenance['completed_epoch']=recorded_epoch(output/'results.csv')
         heartbeat(trainer,True)
-        print('CAMPAIGN_EPOCH',spec['id'],trainer.epoch+1,provenance['validation_metrics'],flush=True)
+        print('CAMPAIGN_EPOCH',spec['id'],provenance['completed_epoch'],provenance['validation_metrics'],flush=True)
     def checkpoint(trainer):
         if stop_reason[0] and trainer.last.exists():
             # final_eval strips optimizer state from last.pt. Keep a resumable
@@ -156,6 +166,7 @@ def run(job_path, resume=False):
         best=output/'weights/best.pt'
         if not best.exists():raise RuntimeError('missing_best_checkpoint')
         provenance.update(status='stopped' if stop_reason[0] else 'completed',finished_at=utc_now(),
+            epoch=recorded_epoch(output/'results.csv'),completed_epoch=recorded_epoch(output/'results.csv'),
             elapsed_seconds=round(time.monotonic()-started,2),stop_reason=stop_reason[0],
             checkpoint=str(best.relative_to(ROOT)),checkpoint_sha256=sha256(best),
             best_validation_metrics=numeric_metrics(metrics.results_dict),
